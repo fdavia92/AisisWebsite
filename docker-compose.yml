@@ -1,0 +1,58 @@
+# Dos perfiles:
+#   docker compose --profile dev  up --build
+#   docker compose --profile prod up --build
+#
+# El servicio "dev" monta el código y corre Vite con HMR.
+# El servicio "prod" construye el bundle y lo sirve con nginx.
+
+services:
+  dev:
+    profiles: ["dev"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    container_name: aisis-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+  prod:
+    profiles: ["prod"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    container_name: aisis-prod
+    ports:
+      - 80
+    restart: unless-stopped
+    environment:
+      # For nginx-proxy
+      - VIRTUAL_HOST=aisis.com.ar,www.aisis.com.ar
+      - LETSENCRYPT_HOST=aisis.com.ar,www.aisis.com.ar
+      - LETSENCRYPT_EMAIL=federico.davia@gmail.com
+      - VIRTUAL_PORT=80
+    networks:
+      - nginx-proxy
+      - aisis_default
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+networks:
+  aisis_default:
+  nginx-proxy:
+      external: true
+      name: nginx-proxy
