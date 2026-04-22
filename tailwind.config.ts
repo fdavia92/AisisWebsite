@@ -73,14 +73,9 @@ export default {
           '0%': { opacity: '0', transform: 'translate3d(0, 12px, 0)' },
           '100%': { opacity: '1', transform: 'translate3d(0, 0, 0)' },
         },
-        'ken-burns': {
-          '0%': { transform: 'scale(1.02)' },
-          '100%': { transform: 'scale(1.08)' },
-        },
       },
       animation: {
         'fade-up': 'fade-up 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
-        'ken-burns': 'ken-burns 18s ease-out both',
       },
     },
   },

@@ -1,0 +1,33 @@
+{
+  "hero": [
+    { "src": "Grbados laser y laser color en patillas y terminales/PXL_20250527_153837502.MP.jpg", "out": "hero-1-patilla", "alt": "Grabado láser en patilla de anteojo" },
+    { "src": "Grabados en estuches/PXL_20240912_172510167.MP.jpg", "out": "hero-2-estuche", "alt": "Estuche de óptica con grabado" },
+    { "src": "Laser en lentillas/PXL_20250416_193103423.MP~2.jpg", "out": "hero-3-lentilla", "alt": "Grabado láser sobre lentilla" },
+    { "src": "Grabados en metal/Placa SCOUT BROWN.jpeg", "out": "hero-4-metal", "alt": "Grabado láser sobre placa metálica" },
+    { "src": "Grabados en madera/PXL_20240308_185441545.PORTRAIT.jpg", "out": "hero-5-madera", "alt": "Grabado láser sobre madera" }
+  ],
+  "sections": [
+    { "src": "Grbados laser y laser color en patillas y terminales/PXL_20250410_123958763.PORTRAIT.ORIGINAL.jpg", "out": "seccion-grabados", "alt": "Patillas de anteojos con grabado" },
+    { "src": "Estuches/P1040960.JPG", "out": "seccion-estuches", "alt": "Estuches para óptica" },
+    { "src": "Zilo-Acetato-Planchas/PXL_20250422_185829516.MP.jpg", "out": "seccion-acetato", "alt": "Planchas de acetato Zilo" },
+    { "src": "Franelas Lavechia/WhatsApp Image 2024-06-14 at 11.18.00.jpeg", "out": "seccion-accesorios", "alt": "Paños de limpieza para óptica" }
+  ],
+  "catalog": [
+    { "src": "Grbados laser y laser color en patillas y terminales/PXL_20250422_184623817.MP.jpg", "out": "laser-anteojos", "alt": "Anteojos con grabado láser" },
+    { "src": "Grbados laser y laser color en patillas y terminales/PXL_20250507_135654909.MP~2.jpg", "out": "laser-patillas", "alt": "Patillas de anteojos con grabado láser" },
+    { "src": "Laser en lentillas/PXL_20250421_142113141~2.jpg", "out": "laser-lentillas", "alt": "Lentillas con grabado láser" },
+    { "src": "Grabados en estuches/PXL_20251023_174127675.MP.jpg", "out": "laser-estuches", "alt": "Estuche con grabado láser" },
+    { "src": "Grabados en metal/PXL_20251105_194324212.jpg", "out": "laser-metal", "alt": "Pieza metálica con grabado láser" },
+    { "src": "Grabados en madera/de62a3f4-97f3-4ee2-9e1e-78427b2e39a9.jpg", "out": "laser-madera", "alt": "Objeto de madera con grabado láser" },
+    { "src": "Grabados en cueros/PXL_20240313_133551208.MP.jpg", "out": "laser-cuero", "alt": "Cuero con grabado láser" },
+    { "src": "Franelas Lavechia/WhatsApp Image 2024-06-14 at 11.18.01.jpeg", "out": "laser-franelas", "alt": "Franela con grabado láser" },
+    { "src": "Tampografia/IMG_20190610_094505208.jpg", "out": "tampo-anteojos", "alt": "Anteojos con marcado tampográfico" },
+    { "src": "Tampografia/IMG_20190610_095143654.jpg", "out": "tampo-estuches", "alt": "Estuche con tampografía" },
+    { "src": "Tampografia/Franela foto lavechia.jpeg", "out": "tampo-franelas", "alt": "Franela con tampografía" },
+    { "src": "Estuches/INFANTIL.jpg", "out": "venta-estuches-1", "alt": "Estuches infantiles para óptica" },
+    { "src": "Estuches/P1040941.JPG", "out": "venta-estuches-2", "alt": "Estuche para óptica" },
+    { "src": "Estuches/P1050999.JPG", "out": "venta-estuches-3", "alt": "Estuche rígido para óptica" },
+    { "src": "Zilo-Acetato-Planchas/PXL_20250422_185843406.MP.jpg", "out": "venta-planchas-acetato", "alt": "Planchas de acetato Zilo" },
+    { "src": "Franelas Lavechia/WhatsApp Image 2024-06-14 at 11.18.00 (2).jpeg", "out": "venta-panios-limpieza", "alt": "Paños de limpieza para óptica" }
+  ]
+}
