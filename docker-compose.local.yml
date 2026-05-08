@@ -1,0 +1,19 @@
+# Local prod run on host port 8080, standalone (no nginx-proxy).
+# Usage: docker compose -f docker-compose.local.yml --profile prod up --build
+services:
+  prod:
+    profiles: ["prod"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+    container_name: aisis-prod-local
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s

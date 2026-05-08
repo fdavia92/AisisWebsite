@@ -103,23 +103,6 @@ export const catalog: Service[] = [
     description: 'Grabado sobre cuero natural y sintético.',
     media: { src: '/images/catalog/laser-cuero.jpg', alt: 'Cuero con grabado láser' },
   },
-  {
-    id: 'laser-franelas',
-    title: 'Grabado láser en franelas',
-    section: 'Grabados',
-    category: 'Laser',
-    description: 'Grabado sobre franelas de microfibra para óptica.',
-    media: { src: '/images/catalog/laser-franelas.jpg', alt: 'Franela con grabado láser' },
-  },
-  {
-    id: 'tampo-franelas',
-    title: 'Tampografía en franelas',
-    section: 'Grabados',
-    category: 'Tampografia',
-    description: 'Tampografía sobre franelas de microfibra.',
-    media: { src: '/images/catalog/tampo-franelas.jpg', alt: 'Franela con tampografía' },
-  },
-
   // ──────────── Estuches ────────────
   {
     id: 'venta-estuches-infantil',

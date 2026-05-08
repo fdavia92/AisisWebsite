@@ -34,7 +34,7 @@ export default {
         sans: ['"Inter"', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
       },
       fontSize: {
-        hero: ['clamp(2.25rem, 6vw + 1rem, 4.375rem)', { lineHeight: '1.02', letterSpacing: '-0.02em', fontWeight: '600' }],
+        hero: ['clamp(2.5rem, 7vw + 1rem, 6rem)', { lineHeight: '1.02', letterSpacing: '-0.02em', fontWeight: '600' }],
         section: ['clamp(1.5rem, 2.4vw + 0.75rem, 1.75rem)', { lineHeight: '1.15', letterSpacing: '-0.01em', fontWeight: '700' }],
         body: ['1rem', { lineHeight: '1.5', fontWeight: '400' }],
         caption: ['0.875rem', { lineHeight: '1.35', fontWeight: '700' }],

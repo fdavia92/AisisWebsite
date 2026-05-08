@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type MouseEvent, type ReactNode } from 'react';
 import { Hero } from './components/Hero';
+import { WorkshopBand } from './components/WorkshopBand';
 import { catalog, SECTION_LABEL, SECTION_SUBTITLE, type Section, type Service } from './data/catalog';
 import { contact } from './data/contact';
 import { IconInstagram, IconWhatsapp, IconArrowRight } from './components/icons';
@@ -69,10 +70,10 @@ const SECTION_FOR_PATH: Record<string, Section> = Object.fromEntries(
   Object.entries(PATH_FOR_SECTION).map(([k, v]) => [v, k as Section]),
 );
 
-const SECTION_ORDER: Section[] = ['Grabados', 'Estuches', 'Acetato', 'Accesorios'];
+const SECTION_ORDER: Section[] = ['Grabados', 'Estuches', 'Acetato'];
 
-const SECTION_COVERS: Record<Section, { src: string; alt: string }> = {
-  Grabados:   { src: '/images/sections/seccion-grabados',   alt: 'Patillas de anteojos con grabado' },
+const SECTION_COVERS: Record<Section, { src: string; alt: string; objectClass?: string }> = {
+  Grabados:   { src: '/images/sections/seccion-grabados',   alt: 'Patillas de anteojos con grabado', objectClass: 'object-top' },
   Estuches:   { src: '/images/sections/seccion-estuches',   alt: 'Estuches para óptica' },
   Acetato:    { src: '/images/sections/seccion-acetato',    alt: 'Planchas de acetato Zilo' },
   Accesorios: { src: '/images/sections/seccion-accesorios', alt: 'Paños de limpieza para óptica' },
@@ -80,31 +81,162 @@ const SECTION_COVERS: Record<Section, { src: string; alt: string }> = {
 
 // ───────────────────────── layout ─────────────────────────
 
+function NavLink({
+  to,
+  label,
+  active,
+}: {
+  to: string;
+  label: string;
+  active: boolean;
+}) {
+  return (
+    <Link
+      to={to}
+      className={
+        'group relative py-1 transition-colors ' +
+        (active ? 'text-ink' : 'text-ink-soft hover:text-ink')
+      }
+    >
+      {label}
+      <span
+        aria-hidden
+        className={
+          'pointer-events-none absolute inset-x-0 -bottom-1 h-0.5 bg-brand-teal origin-left transition-transform duration-300 ease-premium ' +
+          (active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100')
+        }
+      />
+    </Link>
+  );
+}
+
 function Header() {
+  const [open, setOpen] = useState(false);
+  const pathname = useLocation();
+
+  useEffect(() => { setOpen(false); }, [pathname]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
+  const navItems: Array<{ label: string; to?: string; href?: string }> = [
+    ...SECTION_ORDER.map((s) => ({ label: SECTION_LABEL[s], to: PATH_FOR_SECTION[s] })),
+  ];
+
   return (
     <header className="sticky top-0 z-40 bg-surface-paper/85 backdrop-blur-md border-b border-surface-sand">
-      <div className="max-w-content mx-auto flex items-center justify-between px-4 py-3 md:px-8 md:py-4">
-        <Link to="/" className="flex items-center gap-3" ariaLabel="Aisis — Inicio">
-          <img src="/logo.png" alt="" className="h-8 w-8 md:h-10 md:w-10 object-contain" />
-          <span className="font-display text-[1.25rem] md:text-[1.5rem] font-semibold tracking-tight text-ink">
-            Aisis
-          </span>
+      <div className="relative max-w-content mx-auto flex items-center justify-between px-4 py-3 md:px-8 md:py-4">
+        <Link to="/" className="flex items-center" ariaLabel="Aisis — Inicio">
+          <img src="/logo.png" alt="Aisis" className="h-9 w-9 md:h-11 md:w-11 object-contain" />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 text-body text-ink-soft">
-          <Link to="/" className="hover:text-ink transition-colors">Inicio</Link>
-          <a href="#contacto" className="hover:text-ink transition-colors">Contacto</a>
+        <Link
+          to="/"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display text-[1.5rem] leading-none text-ink lg:hidden"
+        >
+          Aisis
+        </Link>
+
+        <nav className="hidden lg:flex items-center gap-8 text-small uppercase tracking-wide">
+          {navItems.map((item) =>
+            item.to ? (
+              <NavLink
+                key={item.label}
+                to={item.to}
+                label={item.label}
+                active={pathname === item.to}
+              />
+            ) : (
+              <a
+                key={item.label}
+                href={item.href}
+                className="text-ink-soft hover:text-ink transition-colors"
+              >
+                {item.label}
+              </a>
+            ),
+          )}
         </nav>
 
-        <a
-          href={contact.whatsapp.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-pill bg-brand-blue px-4 py-2 md:px-6 md:py-3 text-caption text-white hover:bg-brand-blue-900 transition-colors duration-300 ease-premium"
-        >
-          Pedir muestra
-          <span aria-hidden>→</span>
-        </a>
+        <div className="flex items-center gap-3">
+          <a
+            href="#contacto"
+            className="hidden sm:inline-flex items-center gap-2 rounded-pill bg-brand-blue px-6 py-3 text-caption uppercase tracking-wide text-white hover:bg-brand-blue-900 transition-colors duration-300 ease-premium"
+          >
+            Hablemos
+            <IconArrowRight className="h-4 w-4" title="" />
+          </a>
+
+          <button
+            type="button"
+            className="inline-flex h-11 w-11 items-center justify-center lg:hidden"
+            aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            onClick={() => setOpen((v) => !v)}
+          >
+            <svg viewBox="0 0 24 24" className="h-6 w-6 text-ink" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
+              {open ? (
+                <>
+                  <path d="M6 6l12 12" />
+                  <path d="M18 6L6 18" />
+                </>
+              ) : (
+                <>
+                  <path d="M4 7h16" />
+                  <path d="M4 12h16" />
+                  <path d="M4 17h16" />
+                </>
+              )}
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="mobile-nav"
+        className={
+          'lg:hidden overflow-hidden border-t border-surface-sand bg-surface-paper transition-[max-height,opacity] duration-300 ease-premium ' +
+          (open ? 'max-h-[480px] opacity-100' : 'max-h-0 opacity-0')
+        }
+      >
+        <nav className="max-w-content mx-auto flex flex-col px-4 py-4 md:px-8">
+          {navItems.map((item) =>
+            item.to ? (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={
+                  'py-3 font-display text-[1.25rem] border-b border-surface-sand last:border-b-0 transition-colors ' +
+                  (pathname === item.to ? 'text-brand-teal' : 'text-ink')
+                }
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <a
+                key={item.label}
+                href={item.href}
+                className="py-3 font-display text-[1.25rem] text-ink border-b border-surface-sand last:border-b-0"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </a>
+            ),
+          )}
+          <a
+            href="#contacto"
+            onClick={() => setOpen(false)}
+            className="mt-4 inline-flex items-center justify-center gap-2 rounded-pill bg-brand-blue px-6 py-3 text-caption uppercase tracking-wide text-white sm:hidden"
+          >
+            Hablemos
+            <IconArrowRight className="h-4 w-4" title="" />
+          </a>
+        </nav>
       </div>
     </header>
   );
@@ -155,34 +287,14 @@ function Footer() {
 
 // ───────────────────────── home ─────────────────────────
 
-function CredibilityStrip() {
-  const items = [
-    '14 años grabando anteojos',
-    'Villa Urquiza, CABA',
-    'Envíos a todo el país',
-  ];
-  return (
-    <section aria-label="Nosotros" className="bg-surface-paper border-b border-surface-sand">
-      <div className="max-w-content mx-auto flex flex-col items-center gap-4 px-4 py-8 md:flex-row md:justify-between md:gap-8 md:px-8 md:py-10">
-        {items.map((text, i) => (
-          <div key={text} className="flex items-center gap-4 md:flex-1 md:justify-center">
-            {i > 0 && <span aria-hidden className="hidden md:inline text-ink-mute">·</span>}
-            <p className="text-caption uppercase tracking-wide text-ink">{text}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function CategoryCard({ section }: { section: Section }) {
   const cover = SECTION_COVERS[section];
   return (
     <Link
       to={PATH_FOR_SECTION[section]}
-      className="group flex flex-col overflow-hidden rounded-card bg-surface-paper transition-colors duration-500 ease-premium hover:bg-brand-teal-50"
+      className="group flex flex-col"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-surface-sand">
+      <div className="relative aspect-[9/8] overflow-hidden rounded-[8px] bg-surface-sand">
         <picture>
           <source type="image/webp" srcSet={`${cover.src}.webp`} />
           <img
@@ -193,13 +305,9 @@ function CategoryCard({ section }: { section: Section }) {
           />
         </picture>
       </div>
-      <div className="flex flex-1 flex-col p-5 md:p-6">
-        <h3 className="font-display text-[1.375rem] leading-tight text-ink">{SECTION_LABEL[section]}</h3>
+      <div className="flex flex-1 flex-col pt-5">
+        <h3 className="font-display text-[1.25rem] leading-tight text-ink md:text-[1.375rem]">{SECTION_LABEL[section]}</h3>
         <p className="mt-2 text-body text-ink-soft">{SECTION_SUBTITLE[section]}</p>
-        <span className="mt-4 inline-flex items-center gap-2 text-caption text-brand-blue transition-colors group-hover:text-brand-blue-900">
-          Ver
-          <span aria-hidden className="transition-transform duration-300 ease-premium group-hover:translate-x-1">→</span>
-        </span>
       </div>
     </Link>
   );
@@ -208,15 +316,14 @@ function CategoryCard({ section }: { section: Section }) {
 function Categories() {
   return (
     <section id="secciones" className="bg-surface-paper">
-      <div className="max-w-content mx-auto px-4 py-16 md:px-8 md:py-20">
+      <div className="max-w-content mx-auto px-4 pt-4 pb-12 md:px-8 md:py-24">
         <div className="max-w-prose">
-          <p className="text-small uppercase text-brand-teal">Qué hacemos</p>
           <h2 className="mt-3 font-display text-section text-ink">
-            Cuatro rubros, un mismo taller.
+            Nuestros productos y servicios.
           </h2>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-4">
+        <div className="mt-12 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 md:gap-x-8 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-14">
           {SECTION_ORDER.map((section) => (
             <CategoryCard key={section} section={section} />
           ))}
@@ -230,8 +337,8 @@ function Home() {
   return (
     <>
       <Hero />
-      <CredibilityStrip />
       <Categories />
+      <WorkshopBand />
       <Contact />
     </>
   );
@@ -242,33 +349,40 @@ function Home() {
 function ServiceCard({ service }: { service: Service }) {
   const base = service.media.src.replace(/\.jpg$/, '');
   return (
-    <article
-      id={service.id}
-      className="group flex flex-col overflow-hidden rounded-card bg-surface-paper transition-colors duration-500 ease-premium hover:bg-brand-teal-50"
-    >
-      <div className="relative aspect-[4/5] overflow-hidden bg-surface-sand">
+    <article id={service.id} className="flex flex-col">
+      <div className="relative aspect-[9/8] overflow-hidden bg-surface-sand">
         <picture>
           <source type="image/webp" srcSet={`${base}.webp`} />
           <img
             src={`${base}.jpg`}
             alt={service.media.alt}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-700 ease-premium group-hover:scale-[1.04]"
+            className="h-full w-full object-cover"
           />
         </picture>
       </div>
-      <div className="flex flex-1 flex-col p-5 md:p-6">
-        <h3 className="font-display text-[1.25rem] leading-tight text-ink">{service.title}</h3>
-        <p className="mt-2 flex-1 text-body text-ink-soft">{service.description}</p>
-        <a
-          href="#contacto"
-          className="mt-5 inline-flex items-center gap-2 text-caption text-brand-blue hover:text-brand-blue-900 transition-colors"
-        >
-          Consultar
-          <span aria-hidden className="transition-transform duration-300 ease-premium group-hover:translate-x-1">→</span>
-        </a>
+      <div className="flex flex-1 flex-col pt-5">
+        <h3 className="font-display text-[1.375rem] leading-tight text-ink">{service.title}</h3>
       </div>
     </article>
+  );
+}
+
+function SectionHeader({ section }: { section: Section }) {
+  return (
+    <section className="bg-brand-teal-50">
+      <div className="max-w-content mx-auto flex flex-col gap-3 px-4 py-5 md:flex-row md:items-baseline md:gap-8 md:px-8 md:py-6">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-small uppercase text-ink-soft hover:text-ink transition-colors"
+        >
+          <span aria-hidden>←</span> Inicio
+        </Link>
+        <h1 className="font-display text-section leading-tight text-ink">
+          {SECTION_LABEL[section]}
+        </h1>
+      </div>
+    </section>
   );
 }
 
@@ -276,35 +390,90 @@ function SectionPage({ section }: { section: Section }) {
   const items = catalog.filter((s) => s.section === section);
   return (
     <>
-      <section className="bg-surface-paper border-b border-surface-sand">
-        <div className="max-w-content mx-auto px-4 py-10 md:px-8 md:py-14">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-small uppercase text-ink-soft hover:text-ink transition-colors"
-          >
-            <span aria-hidden>←</span> Inicio
-          </Link>
-          <h1 className="mt-4 font-display text-section text-ink">{SECTION_LABEL[section]}</h1>
-          <p className="mt-3 max-w-prose text-body text-ink-soft">{SECTION_SUBTITLE[section]}</p>
-        </div>
-      </section>
+      <SectionHeader section={section} />
 
-      <section className="bg-surface-cream">
-        <div className="max-w-content mx-auto px-4 py-14 md:px-8 md:py-20">
-          {items.length === 0 ? (
-            <p className="text-body text-ink-soft">Pronto publicamos productos de esta sección.</p>
-          ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3">
-              {items.map((service) => (
-                <ServiceCard key={service.id} service={service} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+      {section === 'Acetato' ? (
+        <AcetatoEditorial />
+      ) : (
+        <section className="bg-surface-cream">
+          <div className="max-w-content mx-auto px-4 py-12 md:px-8 md:py-28">
+            {items.length === 0 ? (
+              <p className="text-body text-ink-soft">Pronto publicamos productos de esta sección.</p>
+            ) : (
+              <div className="grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 md:gap-x-10 md:gap-y-20 lg:grid-cols-3">
+                {items.map((service) => (
+                  <ServiceCard key={service.id} service={service} />
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       <Contact />
     </>
+  );
+}
+
+const ACETATO_USOS = [
+  {
+    title: 'Fabricación de armazones',
+    desc: 'Frentes y patillas para anteojos en cellulose acetate de calidad óptica.',
+  },
+  {
+    title: 'Colecciones a medida',
+    desc: 'Colores y patrones específicos para una marca o línea propia.',
+  },
+  {
+    title: 'Reposiciones y service',
+    desc: 'Stock de planchas Zilo para reparaciones y reemplazos.',
+  },
+  {
+    title: 'Prototipado',
+    desc: 'Material de calidad óptica para muestras y desarrollos de producto.',
+  },
+];
+
+function AcetatoEditorial() {
+  const item = catalog.find((s) => s.id === 'venta-planchas-acetato');
+  if (!item) return null;
+  const base = item.media.src.replace(/\.jpg$/, '');
+
+  return (
+    <section className="bg-surface-cream">
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="relative aspect-[4/5] md:aspect-auto md:min-h-[640px]">
+          <picture>
+            <source type="image/webp" srcSet={`${base}.webp`} />
+            <img
+              src={`${base}.jpg`}
+              alt={item.media.alt}
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </picture>
+        </div>
+
+        <div className="flex items-center px-6 py-12 md:px-12 md:py-24 lg:px-16">
+          <div className="max-w-prose">
+            <p className="text-small uppercase text-brand-teal">Planchas Zilo</p>
+            <h2 className="mt-4 font-display text-section text-ink">
+              Material para fabricar anteojos.
+            </h2>
+            <p className="mt-6 text-body text-ink-soft">{item.description}</p>
+
+            <ul className="mt-12 divide-y divide-surface-sand border-t border-surface-sand">
+              {ACETATO_USOS.map((uso) => (
+                <li key={uso.title} className="py-6">
+                  <h3 className="font-display text-[1.25rem] leading-tight text-ink">{uso.title}</h3>
+                  <p className="mt-2 text-body text-ink-soft">{uso.desc}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -332,7 +501,7 @@ function ChannelCard({
       href={href}
       target={external ? '_blank' : undefined}
       rel={external ? 'noopener noreferrer' : undefined}
-      className="group flex flex-col justify-between gap-8 rounded-card bg-surface-paper p-6 transition-colors duration-500 ease-premium hover:bg-brand-teal-50 md:p-8"
+      className="group flex flex-col justify-between gap-8 rounded-card bg-surface-paper p-6 transition-colors duration-500 ease-premium md:p-8"
     >
       <div className="flex items-center gap-4">
         <div className={`flex h-12 w-12 items-center justify-center rounded-full text-white ${iconBg}`}>
@@ -366,7 +535,7 @@ function MailIcon({ className = '' }: { className?: string }) {
 function Contact() {
   return (
     <section id="contacto" className="bg-surface-graphite">
-      <div className="max-w-content mx-auto px-4 py-16 md:px-8 md:py-24">
+      <div className="max-w-content mx-auto px-4 py-12 md:px-8 md:py-24">
         <div className="max-w-prose">
           <p className="text-small uppercase text-brand-teal">Contacto</p>
           <h2 className="mt-3 font-display text-section text-white">
@@ -412,10 +581,9 @@ function Contact() {
               href={contact.location.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-2 font-display text-[1.25rem] text-white hover:text-brand-teal transition-colors"
+              className="mt-2 inline-flex items-center font-display text-[1.25rem] text-white underline-offset-4 hover:underline"
             >
               {contact.location.label}
-              <span aria-hidden className="text-small">→</span>
             </a>
           </div>
           <div>
