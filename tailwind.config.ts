@@ -63,7 +63,7 @@ export default {
       },
       maxWidth: {
         prose: '62ch',
-        content: '1200px',
+        content: '1500px',
       },
       transitionTimingFunction: {
         premium: 'cubic-bezier(0.22, 1, 0.36, 1)',

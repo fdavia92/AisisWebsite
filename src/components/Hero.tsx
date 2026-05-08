@@ -51,7 +51,7 @@ export function Hero() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 sm:grid-rows-3 sm:[grid-auto-rows:minmax(0,1fr)] sm:h-[calc(100svh-140px)] sm:max-h-[840px] sm:min-h-[560px] md:gap-6 md:h-[calc(100svh-173px)]">
           <div
             style={{ animationDelay: '0ms' }}
-            className="animate-fade-up group relative overflow-hidden hidden sm:flex flex-col justify-between gap-8 rounded-card bg-white p-8 text-ink sm:col-start-1 sm:col-span-2 sm:row-start-1 sm:h-full md:p-10"
+            className="animate-fade-up relative overflow-hidden hidden sm:flex flex-col justify-end rounded-card bg-white p-8 text-ink sm:col-start-1 sm:col-span-2 sm:row-start-1 sm:h-full md:p-10"
           >
             <svg
               aria-hidden
@@ -73,22 +73,6 @@ export function Hero() {
                 Grabado láser · Tampografía
               </p>
               <h1 className="mt-4 font-display text-hero leading-none text-ink">Aisis</h1>
-            </div>
-
-            <div className="relative flex flex-wrap items-center gap-4 md:gap-6">
-              <a
-                href="#contacto"
-                className="inline-flex items-center justify-center rounded-pill bg-brand-blue px-6 py-4 text-caption uppercase tracking-wide text-white transition-colors duration-300 ease-premium hover:bg-brand-blue-900"
-              >
-                Hablemos
-              </a>
-              <a
-                href="#secciones"
-                className="inline-flex items-center gap-2 text-caption uppercase tracking-wide text-brand-blue transition-colors duration-300 ease-premium hover:text-brand-blue-900"
-              >
-                Ver catálogo
-                <span aria-hidden className="transition-transform duration-300 ease-premium group-hover:translate-x-1">→</span>
-              </a>
             </div>
           </div>
 
@@ -115,6 +99,7 @@ export function Hero() {
               style={{ animationDelay: photo.delay }}
               className={
                 'group relative overflow-hidden rounded-card bg-surface-sand animate-fade-up ' +
+                'shadow-[0_10px_30px_-8px_rgba(0,0,0,0.28)] ' +
                 'hidden sm:block sm:h-full ' +
                 photo.className
               }
